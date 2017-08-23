@@ -38,12 +38,22 @@
 						<input type="password" class="form-control" name="password" />
 					</div>
 					<div class="text-center">
-						<a href="../index_v1.html" class="btn btn-primary">Sign in</a>
+						<button type="button" class="btn btn-default btn-lg" id="sign-in-btn">Sign in</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<script src="plugins/jquery/jquery.min.js"></script>
+<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#sign-in-btn').click(function () {
+      $.post("/auth/login", {username: $("input[name='username']").val(),
+                            password: $("input[name='password']").val()});
+    }); // missing end of statement.
+  });
+</script>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"strings"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -40,8 +39,8 @@ func main() {
 	//	/auth/login
 	//	/auth/logout
 	auth := router.PathPrefix("/auth").Subrouter()
-	auth.Path("/login").HandlerFunc(LoginHandler)
-	auth.Path("/logout").HandlerFunc(LogoutHandler)
+	auth.Path("/login").Methods("POST").HandlerFunc(LoginHandler)
+	auth.Path("/logout").Methods("GET").HandlerFunc(LogoutHandler)
 
 	router.PathPrefix("/ajax").Handler(negroni.New(
 		negroni.HandlerFunc(AuthMiddleware),
@@ -85,30 +84,6 @@ func Page404Route(res http.ResponseWriter, req *http.Request) {
 	target := "http://" + req.Host
 	http.Redirect(res, req, target, http.StatusTemporaryRedirect)
 }
-func LoginRoute(res http.ResponseWriter, req *http.Request) {
-	res.Write(pageBuff["login"])
-}
-func LoginHandler(res http.ResponseWriter, req *http.Request) {
-	TemporaryLogInRoute(res, req)
-}
-func LogoutHandler(res http.ResponseWriter, req *http.Request) {
-}
-func TemporaryLogInRoute(w http.ResponseWriter, r *http.Request) {
-
-	// Get a session. Get() always returns a session, even if empty.
-	session, err := sessionStore.Get(r, "session-auth")
-	if err != nil {
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		//return
-	}
-
-	// Set some session values.
-	session.Values["foo"] = "bar"
-	// Save it before we write to the response/return from the handler.
-	session.Save(r, w)
-
-	w.Write([]byte("Login Success"))
-}
 
 func LoadPage(path string) []byte {
 	b, err := ioutil.ReadFile(path)
@@ -116,14 +91,4 @@ func LoadPage(path string) []byte {
 		panic(err)
 	}
 	return b
-}
-func isAuth(req *http.Request) bool {
-	// Get a session. Get() always returns a session, even if empty.
-	session, err := sessionStore.Get(req, "session-auth")
-	if err != nil {
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		log.Println("Failed to read session ", err.Error(), http.StatusInternalServerError)
-		return false
-	}
-	return (session.Values["foo"] == "bar")
 }
