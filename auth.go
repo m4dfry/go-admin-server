@@ -13,36 +13,29 @@ func isAuth(req *http.Request) bool {
 		log.Println("Failed to read session. Reset.", err.Error(), http.StatusInternalServerError)
 		return false
 	}
-	return (session.Values["foo"] == "bar")
+	return (session.Values["logged"] == "true")
 }
 
 func LoginRoute(res http.ResponseWriter, req *http.Request) {
 	res.Write(pageBuff["login"])
 }
 func LoginHandler(res http.ResponseWriter, req *http.Request) {
-
 	req.ParseForm()
 	username := req.Form["username"][0]
 	password := req.Form["password"][0]
-	log.Println("U:", username, "-P:", password)
-	//LOG: that
-	//TemporaryLogInRoute(res, req) */
+	if username == "admin" && password == "123456" {
+		SetSecureSessionLogged(res, req, "true")
+	}
 }
 func LogoutHandler(res http.ResponseWriter, req *http.Request) {
+	SetSecureSessionLogged(res, req, "false")
 }
-func TemporaryLogInRoute(w http.ResponseWriter, r *http.Request) {
 
+func SetSecureSessionLogged(w http.ResponseWriter, r *http.Request, value string) {
 	// Get a session. Get() always returns a session, even if empty.
-	session, err := sessionStore.Get(r, "session-auth")
-	if err != nil {
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		//return
-	}
-
+	session, _ := sessionStore.Get(r, "session-auth")
 	// Set some session values.
-	session.Values["foo"] = "bar"
+	session.Values["logged"] = value
 	// Save it before we write to the response/return from the handler.
 	session.Save(r, w)
-
-	w.Write([]byte("Login Success"))
 }
