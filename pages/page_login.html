@@ -51,7 +51,11 @@
   $(document).ready(function(){
     $('#sign-in-btn').click(function () {
       $.post("/auth/login", {username: $("input[name='username']").val(),
-                            password: $("input[name='password']").val()});
+                            password: $("input[name='password']").val()},
+          					function( data ) {
+          						if (data==='true') { window.location.replace("/"); }
+								else { alert('fail!'); }
+							});
     }); // missing end of statement.
   });
 </script>

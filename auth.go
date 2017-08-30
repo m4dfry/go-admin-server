@@ -25,6 +25,9 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 	password := req.Form["password"][0]
 	if username == "admin" && password == "123456" {
 		SetSecureSessionLogged(res, req, "true")
+		res.Write([]byte("true"))
+	} else {
+		res.Write([]byte("false"))
 	}
 }
 func LogoutHandler(res http.ResponseWriter, req *http.Request) {
