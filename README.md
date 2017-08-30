@@ -1,15 +1,15 @@
 # go-webapp-template
-===========================
 
 A template for Go Web Applications using: 
  * [Gorilla Toolkit](http://www.gorillatoolkit.org/)
  * [Negroni](https://github.com/urfave/negroni)
  * [nnmware / DevOOPS Bootstrap 3 Admin theme](https://github.com/nnmware/devoops)
 
-At this time, consider the project TOTALLY WIP
+At this time, consider the project **TOTALLY WIP**
+
 You can login with user:admin pass:123456
 
-===========================
+---
 
 - To be added
   - Add libs license in README (show all the license neeeded in the right way)
@@ -27,6 +27,7 @@ You can login with user:admin pass:123456
 
 - Ideas
   - Add pages to site using Go Plugin (is it possible ??)
+
 ---
 
 Have a request, suggestion , critic or question? Open an Issue!
