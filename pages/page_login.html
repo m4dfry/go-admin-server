@@ -26,6 +26,9 @@
 			</div>
 			<div class="box">
 				<div class="box-content">
+					<div class="text-center" id="div-psw-wrong" style="visibility: hidden">
+						<p class="bg-danger">User/password wrong. Please correct.</p>
+					</div>
 					<div class="text-center">
 						<h3 class="page-header">DevOOPS Login Page</h3>
 					</div>
@@ -50,11 +53,12 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $('#sign-in-btn').click(function () {
-      $.post("/auth/login", {username: $("input[name='username']").val(),
+        $("#div-psw-wrong").css("visibility","hidden");
+        $.post("/auth/login", {username: $("input[name='username']").val(),
                             password: $("input[name='password']").val()},
           					function( data ) {
-          						if (data==='true') { window.location.replace("/"); }
-								else { alert('fail!'); }
+          						if (data==="true") { window.location.replace("/"); }
+								else { $("#div-psw-wrong").css("visibility","visible"); }
 							});
     }); // missing end of statement.
   });
