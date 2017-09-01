@@ -2,7 +2,7 @@ package settings
 
 
 import (
-	"fmt"
+	"log"
 )
 
 type Config struct {
@@ -16,6 +16,9 @@ type Config struct {
 	LogNegroni bool   `json:"log-negroni"`
 }
 
+func Init(){
+	log.Println("Init settings.")
+}
 /*
 JSON TEMPLATE FOR CONFIG (WIP)
 {

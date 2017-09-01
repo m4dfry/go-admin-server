@@ -24,6 +24,8 @@ func init() {
 	log.Println("Session Key:", token)
 	sessionStore = sessions.NewCookieStore(token)
 
+	settings.Init()
+
 	pageBuff = make(map[string][]byte)
 	pageBuff["index"] = LoadPage("pages/index.html")
 	pageBuff["login"] = LoadPage("pages/page_login.html")
