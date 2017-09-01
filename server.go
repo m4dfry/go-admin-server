@@ -10,6 +10,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/urfave/negroni"
+
+	"github.com/m4dfry/go-admin-server/settings"
 )
 
 var sessionStore *sessions.CookieStore
