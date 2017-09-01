@@ -3,6 +3,11 @@ package settings
 
 import (
 	"log"
+	"encoding/json"
+	"io/ioutil"
+	"fmt"
+	"os"
+	"bufio"
 )
 
 type Config struct {
@@ -18,6 +23,20 @@ type Config struct {
 
 func Init(){
 	log.Println("Init settings.")
+	ReadConfig()
+}
+
+func ReadConfig() { // Use json.Decode for reading streams of JSON data
+	f, err := os.Open("config.json")
+	if err != nil {
+		panic(e)
+	}
+	f_reader := bufio.NewReader(f)
+
+	var config Config
+	if err := json.NewDecoder(f_reader).Decode(config); err != nil {
+		log.Println(err)
+	}
 }
 /*
 JSON TEMPLATE FOR CONFIG (WIP)
