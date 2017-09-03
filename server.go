@@ -6,25 +6,43 @@ import (
 	"math/rand"
 	"net/http"
 	"time"
+	"flag"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/urfave/negroni"
 
 	"github.com/m4dfry/go-admin-server/settings"
+
+	"strconv"
 )
 
 var sessionStore *sessions.CookieStore
 var pageBuff map[string][]byte
+var configs *settings.Config
+
+func usage(){
+	// DO NOTHING FOR NOW
+
+}
 
 func init() {
+	var config_path = flag.String("c", "", "Custom configuration file path")
+
+	flag.Usage = func() {
+		usage()
+		flag.PrintDefaults()
+	}
+
+	flag.Parse()
+
 	token := make([]byte, 32)
 	rand.Seed(time.Now().Unix())
 	rand.Read(token)
 	log.Println("Session Key:", token)
 	sessionStore = sessions.NewCookieStore(token)
 
-	settings.Init()
+	configs = settings.Init(config_path)
 
 	pageBuff = make(map[string][]byte)
 	pageBuff["index"] = LoadPage("pages/index.html")
@@ -62,7 +80,7 @@ func main() {
 	//n.Use(negroni.NewStatic(http.Dir("public")))
 	//n.Use(negroni.HandlerFunc(AuthMiddleware))
 	n.UseHandler(router)
-	n.Run(":4000")
+	n.Run(configs.Address + ":" + strconv.Itoa(configs.Port))
 	//log.Println("Starting server on :4000")
 	//http.ListenAndServe(":4000", router)
 }

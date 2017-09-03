@@ -4,57 +4,44 @@ package settings
 import (
 	"log"
 	"encoding/json"
-	"io/ioutil"
-	"fmt"
 	"os"
 	"bufio"
 )
 
+const CONFIG_DEFAULT_PATH = "config.json"
+
+type User struct {
+	RealName string `json:"realname"`
+	Password string `json:"password"`
+	Avatar   string `json:"avatar"`
+}
+
 type Config struct {
-	Users []struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-		Avatar   string `json:"avatar"`
-	} `json:"users"`
+	Users		map[string](User)
 	Port       int    `json:"port"`
 	Address    string `json:"address"`
 	LogNegroni bool   `json:"log-negroni"`
 }
 
-func Init(){
+func Init(cp *string) *Config{
 	log.Println("Init settings.")
-	ReadConfig()
+	a := ReadConfig(cp)
+	return a
 }
 
-func ReadConfig() { // Use json.Decode for reading streams of JSON data
-	f, err := os.Open("config.json")
+func ReadConfig(cp *string) (*Config) { // Use json.Decode for reading streams of JSON data
+	if *cp == "" { *cp = CONFIG_DEFAULT_PATH }
+	log.Println("File config:", *cp)
+	f, err := os.Open(*cp)
 	if err != nil {
-		panic(e)
+		panic(err)
 	}
 	f_reader := bufio.NewReader(f)
 
 	var config Config
-	if err := json.NewDecoder(f_reader).Decode(config); err != nil {
+	if err := json.NewDecoder(f_reader).Decode(&config); err != nil {
 		log.Println(err)
 	}
-}
-/*
-JSON TEMPLATE FOR CONFIG (WIP)
-{
-  "users": [
-     {"username": "user1", "password": "thapassword",
-                  "avatar": "path/for/avatar"
-    },
-    {"username": "user2", "password": "tha123235534",
-                  "avatar": "path/for/avatar"
-    },
-    {"username": "user3", "password": "£$DFSFFS",
-                  "avatar": "path/for/avatar"
-    }
-  ],
-  "port" : 4000,
-  "address" : "",
-  "log-negroni": true
-}
 
-*/
+	return &config//, users
+}

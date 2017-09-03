@@ -21,9 +21,7 @@ func LoginRoute(res http.ResponseWriter, req *http.Request) {
 }
 func LoginHandler(res http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	username := req.Form["username"][0]
-	password := req.Form["password"][0]
-	if username == "admin" && password == "123456" {
+	if value, ok := configs.Users[req.Form["username"][0]]; (ok && value.Password == req.Form["password"][0]) {
 		SetSecureSessionLogged(res, req, "true")
 		res.Write([]byte("true"))
 	} else {
