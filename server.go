@@ -71,10 +71,14 @@ func main() {
 
 	router.HandleFunc("/", IndexRoute)
 	router.NotFoundHandler = http.HandlerFunc(Page404Route)
+
 	//n := negroni.Classic()
-	negroniLogger := negroni.NewLogger()
-	negroniLogger.SetFormat(" {{.Status}} | {{.Duration}} | {{.Hostname}} | {{.Method}} {{.Path}} \n")
-	n := negroni.New(negroniLogger)
+	n := negroni.New()
+	if configs.LogNegroni {
+		negroniLogger := negroni.NewLogger()
+		negroniLogger.SetFormat(" {{.Status}} | {{.Duration}} | {{.Hostname}} | {{.Method}} {{.Path}} \n")
+		n.Use(negroniLogger)
+	}
 
 	// Doesn't work as expected
 	//n.Use(negroni.NewStatic(http.Dir("public")))
