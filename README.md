@@ -28,6 +28,13 @@ You can login with user:admin pass:123456
 - Ideas
   - Add pages to site using Go Plugin (is it possible ??)
 
+## License
+
+Used software (all software is licensed under appropriate license of authors)
+* DevOOPS Bootstrap 3 Admin theme [https://github.com/nnmware/devoops](https://github.com/nnmware/devoops)  v2 MIT
+* Gorilla web toolkit [http://www.gorillatoolkit.org/](http://www.gorillatoolkit.org/) BSD 3-clause "New" or "Revised" License
+* Negroni [https://github.com/urfave/negroni](https://github.com/urfave/negroni) 0.2.0 - 2016-05-10 MIT 
+
 ---
 
 Have a request, suggestion , critic or question? Open an Issue!
