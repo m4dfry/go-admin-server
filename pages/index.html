@@ -77,7 +77,7 @@
 									<i class="fa fa-angle-down pull-right"></i>
 									<div class="user-mini pull-right">
 										<span class="welcome">Welcome,</span>
-										<span>Jane Devoops</span>
+										<span id="realname">unknow</span>
 									</div>
 								</a>
 								<ul class="dropdown-menu">
@@ -314,5 +314,10 @@
 -->
 <!-- All functions for this theme + document.ready processing -->
 <script src="static/js/devoops.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#realname').html(getCookie("realname"));
+    });
+</script>
 </body>
 </html>
