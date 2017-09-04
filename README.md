@@ -7,12 +7,11 @@ A template for Go Web Applications using:
 
 At this time, consider the project **TOTALLY WIP**
 
-You can login with user:admin pass:123456
+You can login with user:admin pass:123456 loading the standard template.
 
 ---
 
 - To be added
-  - Add libs license in README (show all the license neeeded in the right way)
   - [Sanitize input](https://github.com/kennygrant/sanitize)
   - Local Authentication with MongoDB
   - Enable text compression
@@ -27,6 +26,16 @@ You can login with user:admin pass:123456
 
 - Ideas
   - Add pages to site using Go Plugin (is it possible ??)
+
+## Demo
+
+You can see the theme at his full potential with a checkout of demo branch.
+On the main branch I will strip all the unecessary, in order to get the best reduced version of all elementary functionality
+
+**Why a branch and not a tag ?**
+
+Beacause I see future improvement (and a lot of bugs) even on demo
+
 
 ## License
 

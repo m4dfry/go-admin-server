@@ -1,0 +1,17 @@
+{
+  "users": {
+    "admin": {
+      "realname": "Administrator",
+      "password": "123456",
+      "avatar": "path/for/avatar"
+    },
+    "foo": {
+      "realname": "UsernameFoo",
+      "password": "bar123456",
+      "avatar": "path/for/avatar"
+    }
+  },
+  "port": 8080,
+  "address": "127.0.0.1",
+  "log-negroni": false
+}
