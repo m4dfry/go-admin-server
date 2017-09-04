@@ -22,7 +22,8 @@ func LoginRoute(res http.ResponseWriter, req *http.Request) {
 func LoginHandler(res http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	if value, ok := configs.Users[req.Form["username"][0]]; (ok && value.Password == req.Form["password"][0]) {
-		SetSecureSessionLogged(res, req, "true")
+		SetSecureSession(res, req, "logged","true")
+		SetSecureSession(res, req, "avatar", value.Avatar)
 		SetCookieRealname(res, value.RealName)
 		res.Write([]byte("true"))
 	} else {
@@ -30,14 +31,14 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 	}
 }
 func LogoutHandler(res http.ResponseWriter, req *http.Request) {
-	SetSecureSessionLogged(res, req, "false")
+	SetSecureSession(res, req, "logged","false")
 }
 
-func SetSecureSessionLogged(w http.ResponseWriter, r *http.Request, value string) {
+func SetSecureSession(w http.ResponseWriter, r *http.Request, name string,value string) {
 	// Get a session. Get() always returns a session, even if empty.
 	session, _ := sessionStore.Get(r, "session-auth")
 	// Set some session values.
-	session.Values["logged"] = value
+	session.Values[name] = value
 	// Save it before we write to the response/return from the handler.
 	session.Save(r, w)
 }

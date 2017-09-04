@@ -45,8 +45,8 @@ func init() {
 	configs = settings.Init(config_path)
 
 	pageBuff = make(map[string][]byte)
-	pageBuff["index"] = LoadPage("pages/index.html")
-	pageBuff["login"] = LoadPage("pages/page_login.html")
+	pageBuff["index"] = LoadFile("pages/index.html")
+	pageBuff["login"] = LoadFile("pages/page_login.html")
 }
 
 func main() {
@@ -56,6 +56,9 @@ func main() {
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 	router.PathPrefix("/plugins/").Handler(http.FileServer(http.Dir("static/")))
 	router.PathPrefix("/img/").Handler(http.FileServer(http.Dir("static/")))
+
+	user := router.PathPrefix("/user").Subrouter()
+	user.Path("/avatar").Methods("GET").HandlerFunc(UserAvatar)
 
 	//	To login/logout/signup:
 	//	/auth/login
@@ -113,7 +116,12 @@ func Page404Route(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, target, http.StatusTemporaryRedirect)
 }
 
-func LoadPage(path string) []byte {
+func UserAvatar(res http.ResponseWriter, req *http.Request) {
+	session, _ := sessionStore.Get(req, "session-auth")
+	res.Write(LoadFile(session.Values["avatar"].(string)))
+}
+
+func LoadFile(path string) []byte {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
