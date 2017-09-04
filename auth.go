@@ -32,6 +32,7 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 }
 func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 	SetSecureSession(res, req, "logged","false")
+	PageRootRoute(res, req)
 }
 
 func SetSecureSession(w http.ResponseWriter, r *http.Request, name string,value string) {

@@ -73,7 +73,7 @@ func main() {
 	))
 
 	router.HandleFunc("/", IndexRoute)
-	router.NotFoundHandler = http.HandlerFunc(Page404Route)
+	router.NotFoundHandler = http.HandlerFunc(PageRootRoute)
 
 	//n := negroni.Classic()
 	n := negroni.New()
@@ -111,7 +111,7 @@ func IndexRoute(res http.ResponseWriter, req *http.Request) {
 		LoginRoute(res, req)
 	}
 }
-func Page404Route(res http.ResponseWriter, req *http.Request) {
+func PageRootRoute(res http.ResponseWriter, req *http.Request) {
 	target := "http://" + req.Host
 	http.Redirect(res, req, target, http.StatusTemporaryRedirect)
 }
