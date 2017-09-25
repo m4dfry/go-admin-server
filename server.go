@@ -75,6 +75,11 @@ func main() {
 	router.HandleFunc("/", IndexRoute)
 	router.NotFoundHandler = http.HandlerFunc(PageRootRoute)
 
+	// Money API
+	money := router.PathPrefix("/money").Subrouter()
+	money.Path("/reg").Methods("POST").HandlerFunc(MoneyPostHandler)
+	money.Path("/reg").Methods("GET").HandlerFunc(MoneyGetHandler)
+
 	//n := negroni.Classic()
 	n := negroni.New()
 	if configs.LogNegroni {
