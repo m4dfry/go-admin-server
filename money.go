@@ -1,18 +1,15 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func MoneyPostHandler(res http.ResponseWriter, req *http.Request) {
+
 	req.ParseForm()
-	//req.Form["username"][0]
+	//TO-DO
+	res.Write([]byte("true" + req.Form["date"][0]))
 
-	ok := true
-	if ok {
-
-		res.Write([]byte("true"))
-	} else {
-		res.Write([]byte("false"))
-	}
 }
 
 func MoneyGetHandler(res http.ResponseWriter, req *http.Request) {
