@@ -86,7 +86,7 @@
         // Initialize datepicker
         $('#input_date').datepicker({setDate: new Date()});
         $('#input_date').datepicker( "option", "showAnim", "slideDown" );
-        $('#input_date').datepicker( "option", "dateFormat", "dd/mm/yy" );
+        $('#input_date').datepicker( "option", "dateFormat", "yy-mm-dd" ); // ISO8601 - https://jqueryui.com/datepicker/#date-formats
 
         // process the form
         $('form').submit(function(event) {
