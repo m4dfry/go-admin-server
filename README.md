@@ -11,6 +11,18 @@ You can login with user:admin pass:123456 loading the standard template.
 
 ---
 
+The idea is to work with plug-in that users can compile and share with pages to include on the template.
+
+**NB**
+Unfortunatly in version 1.8 Go plugin only works on Linux.
+
+---
+- To do ASAP
+  - some API must check the login first
+  - FIX info in index template
+  - ADD option on config to disable login
+  - ADD option OnlyLocal for server
+
 - To be added
   - [Sanitize input](https://github.com/kennygrant/sanitize)
   - Local Authentication with MongoDB
@@ -24,8 +36,6 @@ You can login with user:admin pass:123456 loading the standard template.
 - Controversial choices
   - Token of CookieStore is regenerated randomly at each start
 
-- Ideas
-  - Add pages to site using Go Plugin (is it possible ??)
 
 ## Demo
 
