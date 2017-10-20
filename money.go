@@ -38,12 +38,11 @@ func MoneyPostHandler(res http.ResponseWriter, req *http.Request) {
 	// CONVERT DATE FROM STRING
 	conv := "2006-01-02"
 	tDate, err := time.Parse(conv , req.Form["date"][0])
-
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	// CONVERT AMOUNT FROM STRIN
+	// CONVERT AMOUNT FROM STRING
 	fAmount := new(big.Float)
 	_ , err = fmt.Sscan(sAmount, fAmount)
 	if err != nil {
@@ -64,7 +63,6 @@ func MoneyPostHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	session, err := mgo.DialWithInfo(dialInfo)
-	//session, err := mgo.Dial("mongodb://:@?ssl=true&replicaSet=&authSource=admin")
 	if err != nil {
 		panic(err)
 	}
@@ -85,4 +83,10 @@ func MoneyPostHandler(res http.ResponseWriter, req *http.Request) {
 func MoneyGetHandler(res http.ResponseWriter, req *http.Request) {
 
 }
+
+func MoneyDeleteHandler(res http.ResponseWriter, req *http.Request) {
+
+}
+
+
 

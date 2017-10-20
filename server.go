@@ -79,6 +79,10 @@ func main() {
 	money := router.PathPrefix("/money").Subrouter()
 	money.Path("/reg").Methods("POST").HandlerFunc(MoneyPostHandler)
 	money.Path("/reg").Methods("GET").HandlerFunc(MoneyGetHandler)
+	money.Path("/reg").Methods("DELETE").Handler(negroni.New(
+		negroni.HandlerFunc(AuthMiddleware),
+		negroni.HandlerFunc(MoneyDeleteHandler),
+	))
 
 	//n := negroni.Classic()
 	n := negroni.New()
