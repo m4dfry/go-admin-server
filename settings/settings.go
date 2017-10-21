@@ -1,6 +1,5 @@
 package settings
 
-
 import (
 	"log"
 	"encoding/json"

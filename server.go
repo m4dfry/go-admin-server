@@ -7,14 +7,14 @@ import (
 	"net/http"
 	"time"
 	"flag"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/urfave/negroni"
 
 	"github.com/m4dfry/go-admin-server/settings"
-
-	"strconv"
+	"github.com/m4dfry/go-admin-server/plugins"
 )
 
 var sessionStore *sessions.CookieStore
@@ -66,6 +66,9 @@ func main() {
 	auth := router.PathPrefix("/auth").Subrouter()
 	auth.Path("/login").Methods("POST").HandlerFunc(LoginHandler)
 	auth.Path("/logout").Methods("GET").HandlerFunc(LogoutHandler)
+
+	plugin := router.PathPrefix("/plugin").Subrouter()
+	plugin.Path("/test").Methods("POST").HandlerFunc(plugins.PluginHandler)
 
 	router.PathPrefix("/ajax").Handler(negroni.New(
 		negroni.HandlerFunc(AuthMiddleware),
