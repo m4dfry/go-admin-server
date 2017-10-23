@@ -53,13 +53,18 @@ func PluginHandler(response http.ResponseWriter, request *http.Request)() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// We should have a Greeter now! This feels like a normal interface
-	// implementation but is in fact over an RPC connection.
 	greeter = raw.(Greeter)
 	fmt.Println(greeter.Greet())
-}
 
+
+	raw, err = rpcClient.Dispense("call")
+	if err != nil {
+		log.Fatal(err)
+	}
+	call := raw.(HtmlCall)
+	response.Write([] byte(call.Call("F")))
+
+}
 
 // handshakeConfigs are used to just do a basic handshake between
 // a plugin and host. If the handshake fails, a user friendly error is shown.
@@ -75,4 +80,5 @@ var handshakeConfig = plugin.HandshakeConfig{
 var pluginMap = map[string]plugin.Plugin{
 	"greeter": &GreeterPlugin{},
 	"marryme": &GreeterPlugin{},
+	"call": &HtmlCallPlugin{},
 }

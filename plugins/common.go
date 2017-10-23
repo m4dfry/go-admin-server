@@ -4,13 +4,12 @@ import (
 	"net/rpc"
 
 	"github.com/hashicorp/go-plugin"
-	"net/http"
 )
 
 
 // HtmlCall is the interface that we're exposing as a plugin.
 type HtmlCall interface {
-	Call(res http.ResponseWriter, req *http.Request)
+	Call(string) string
 }
 
 // Greeter is the interface that we're exposing as a plugin.
@@ -25,13 +24,15 @@ type HtmlCallRPC struct{ client *rpc.Client }
 type GreeterRPC struct{ client *rpc.Client }
 
 
-func (g *HtmlCallRPC) Call() {
-	err := g.client.Call("Plugin.Greet", new(interface{}), &resp)
+func (g *HtmlCallRPC) Call(data string) string {
+	var resp string
+	err := g.client.Call("Plugin.Call", data, &resp)
 	if err != nil {
 		// You usually want your interfaces to return errors. If they don't,
 		// there isn't much other choice here.
 		panic(err)
 	}
+	return resp
 }
 
 func (g *GreeterRPC) Greet() string {
@@ -51,8 +52,8 @@ type HtmlCallRPCServer struct {
 	Impl HtmlCall
 }
 
-func (s *HtmlCallRPCServer) Call(res http.ResponseWriter, req *http.Request) error {
-	s.Impl.Call(res, req)
+func (s *HtmlCallRPCServer) Call(data string, resp *string) error {
+	*resp = s.Impl.Call(data)
 	return nil
 }
 
@@ -89,4 +90,20 @@ func (p *GreeterPlugin) Server(*plugin.MuxBroker) (interface{}, error) {
 
 func (GreeterPlugin) Client(b *plugin.MuxBroker, c *rpc.Client) (interface{}, error) {
 	return &GreeterRPC{client: c}, nil
+}
+
+
+// ****************  MY IMPL
+
+type HtmlCallPlugin struct {
+	// Impl Injection
+	Impl HtmlCall
+}
+
+func (p *HtmlCallPlugin) Server(*plugin.MuxBroker) (interface{}, error) {
+	return &HtmlCallRPCServer{Impl: p.Impl}, nil
+}
+
+func (HtmlCallPlugin) Client(b *plugin.MuxBroker, c *rpc.Client) (interface{}, error) {
+	return &HtmlCallRPC{client: c}, nil
 }

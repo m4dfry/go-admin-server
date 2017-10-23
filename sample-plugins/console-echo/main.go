@@ -18,6 +18,11 @@ type  MarryMe struct {
 	logger hclog.Logger
 }
 
+// Here is a real implementation of Greeter
+type  AnswerPlugin struct {
+	logger hclog.Logger
+}
+
 func (g *GreeterHello) Greet() string {
 	g.logger.Debug("message from GreeterHello.Greet")
 	return "Hello!"
@@ -26,6 +31,12 @@ func (g *GreeterHello) Greet() string {
 func (g *MarryMe) Greet() string {
 	g.logger.Debug("message from GreeterHello.MarryMe")
 	return "MarryMe!"
+}
+
+func (g* AnswerPlugin) Call(str string) string {
+	g.logger.Debug("message from AnswerPlugin.HtmlCall")
+
+	return "{" + str + ":true}"
 }
 
 // handshakeConfigs are used to just do a basic handshake between
@@ -52,10 +63,16 @@ func main() {
 	marryme := &MarryMe{
 		logger: logger,
 	}
+
+	htmlcall := &AnswerPlugin{
+		logger: logger,
+	}
+
 	// pluginMap is the map of plugins we can dispense.
 	var pluginMap = map[string]plugin.Plugin{
 		"greeter": &common.GreeterPlugin{Impl: greeter},
 		"marryme": &common.GreeterPlugin{Impl: marryme},
+		"call": &common.HtmlCallPlugin{Impl: htmlcall},
 	}
 
 	logger.Debug("message from plugin", "foo", "bar")
