@@ -66,6 +66,46 @@ func PluginHandler(response http.ResponseWriter, request *http.Request)() {
 
 }
 
+
+func CleanPluginHandler(response http.ResponseWriter, request *http.Request)() {
+
+	// pluginMap is the map of plugins we can dispense.
+	var cleanPluginMap = map[string]plugin.Plugin{
+		"call": &HtmlCallPlugin{},
+		"doublecall": &HtmlCallPlugin{},
+	}
+
+	// We're a host! Start by launching the plugin process.
+	client := plugin.NewClient(&plugin.ClientConfig{
+		HandshakeConfig: GetHandshakeConfig(),
+		Plugins:         cleanPluginMap,
+		Cmd:             exec.Command("sample-plugins/simple-plugin/simple-plugin.exe"),
+	})
+	defer client.Kill()
+
+	// Connect via RPC
+	rpcClient, err := client.Client()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	raw, err := rpcClient.Dispense("doublecall")
+	if err != nil {
+		log.Fatal(err)
+	}
+	call := raw.(HtmlCall)
+	response.Write([] byte(call.Call("F")))
+
+}
+
+func GetHandshakeConfig() plugin.HandshakeConfig {
+	return plugin.HandshakeConfig{
+		ProtocolVersion:  1,
+		MagicCookieKey:   "BASIC_PLUGIN",
+		MagicCookieValue: "hello",
+	}
+}
+
 // handshakeConfigs are used to just do a basic handshake between
 // a plugin and host. If the handshake fails, a user friendly error is shown.
 // This prevents users from executing bad plugins or executing a plugin

@@ -68,7 +68,9 @@ func main() {
 	auth.Path("/logout").Methods("GET").HandlerFunc(LogoutHandler)
 
 	plugin := router.PathPrefix("/plugin").Subrouter()
-	plugin.Path("/test").Methods("POST").HandlerFunc(plugins.PluginHandler)
+	plugin.Path("/test").Methods("POST").HandlerFunc(plugins.CleanPluginHandler)
+	plugin.Path("/test_old").Methods("POST").HandlerFunc(plugins.PluginHandler)
+
 
 	router.PathPrefix("/ajax").Handler(negroni.New(
 		negroni.HandlerFunc(AuthMiddleware),
