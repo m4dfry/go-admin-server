@@ -15,6 +15,7 @@ import (
 
 	"github.com/m4dfry/go-admin-server/settings"
 	"github.com/m4dfry/go-admin-server/plugins"
+
 )
 
 var sessionStore *sessions.CookieStore
@@ -43,6 +44,7 @@ func init() {
 	sessionStore = sessions.NewCookieStore(token)
 
 	configs = settings.Init(config_path)
+	plugins.Init(configs.Plugins)
 
 	pageBuff = make(map[string][]byte)
 	pageBuff["index"] = LoadFile("pages/index.html")
@@ -68,9 +70,11 @@ func main() {
 	auth.Path("/logout").Methods("GET").HandlerFunc(LogoutHandler)
 
 	plugin := router.PathPrefix("/plugin").Subrouter()
-	plugin.Path("/test").Methods("POST").HandlerFunc(plugins.CleanPluginHandler)
-	plugin.Path("/test_old").Methods("POST").HandlerFunc(plugins.PluginHandler)
-
+	for k, v := range configs.Plugins {
+		for _, fun := range v.Functions {
+			plugin.Path("/" + k + "/" + fun.Name).HandlerFunc(plugins.CleanPluginHandler).Methods(fun.Type)
+		}
+	}
 
 	router.PathPrefix("/ajax").Handler(negroni.New(
 		negroni.HandlerFunc(AuthMiddleware),

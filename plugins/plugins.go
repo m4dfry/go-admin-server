@@ -9,9 +9,30 @@ import (
 	hclog "github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
 	"net/http"
+	"strings"
+	"github.com/m4dfry/go-admin-server/settings"
 )
 
+// pluginMap is the map of plugins we can dispense.
+var cleanPluginMap = map[string]plugin.Plugin{
+	"call": &HtmlCallPlugin{},
+	"doublecall": &HtmlCallPlugin{},
+}
 
+var pluginsMap map[string](map[string]plugin.Plugin)
+
+func Init(inPlugin map[string]settings.Plugin) {
+
+	pluginsMap = make(map[string](map[string]plugin.Plugin))
+
+	for pluginName, pg := range inPlugin {
+		pluginsMap[pluginName] = make(map[string]plugin.Plugin)
+
+		for _, function := range pg.Functions {
+			pluginsMap[pluginName][function.Name] = &HtmlCallPlugin{}
+		}
+	}
+}
 
 func PluginHandler(response http.ResponseWriter, request *http.Request)() {
 	// Create an hclog.Logger
@@ -69,17 +90,20 @@ func PluginHandler(response http.ResponseWriter, request *http.Request)() {
 
 func CleanPluginHandler(response http.ResponseWriter, request *http.Request)() {
 
-	// pluginMap is the map of plugins we can dispense.
-	var cleanPluginMap = map[string]plugin.Plugin{
-		"call": &HtmlCallPlugin{},
-		"doublecall": &HtmlCallPlugin{},
+	reqSplit := strings.Split(request.URL.Path , "/")
+
+	if len(reqSplit) < 4 {
+		log.Fatal("URL.Path Incorrect (" +  request.URL.Path + ")")
 	}
 
-	// We're a host! Start by launching the plugin process.
+	pluginName := reqSplit[2]
+	funName := reqSplit[3]
+
+    // We're a host! Start by launching the plugin process.
 	client := plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: GetHandshakeConfig(),
-		Plugins:         cleanPluginMap,
-		Cmd:             exec.Command("sample-plugins/simple-plugin/simple-plugin.exe"),
+		Plugins:         pluginsMap[pluginName],
+		Cmd:             exec.Command("sample-plugins/" + pluginName + "/" + pluginName + ".exe"),
 	})
 	defer client.Kill()
 
@@ -89,7 +113,7 @@ func CleanPluginHandler(response http.ResponseWriter, request *http.Request)() {
 		log.Fatal(err)
 	}
 
-	raw, err := rpcClient.Dispense("doublecall")
+	raw, err := rpcClient.Dispense(funName)
 	if err != nil {
 		log.Fatal(err)
 	}

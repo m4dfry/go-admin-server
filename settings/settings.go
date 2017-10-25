@@ -15,8 +15,19 @@ type User struct {
 	Avatar   string `json:"avatar"`
 }
 
+type Function struct {
+	Name	string `json:"name"`
+	Type	string `json:"type"`
+	Url 	string  `json:"url"`
+}
+
+type Plugin struct {
+	Functions []Function `json:"functions"`
+}
+
 type Config struct {
 	Users		map[string](User)
+	Plugins		map[string](Plugin)
 	Port       int    `json:"port"`
 	Address    string `json:"address"`
 	LogNegroni bool   `json:"log-negroni"`
